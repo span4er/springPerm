@@ -1,0 +1,272 @@
+
+
+body{ 
+   font-family: 'Times New Roman', Times, serif;
+    box-sizing: border-box;
+    background: #5FA9D2;
+    margin:0;
+    color:white;
+}
+.current_date_time{
+    position: absolute;
+    top: 65px;
+    font-size: 20px;
+   /* background-color: #00b5c2;*/
+    color: white;
+    min-height: 50px;
+    min-width: 400px;
+    text-align: center;
+    right: 0;
+}
+
+.user_no_pic{
+    width:20px;
+    height: 20px;
+}
+
+.log{
+     border: 2px solid #000000; 
+     border-radius: 20px;
+     width: 20vw;
+     text-align: center;
+     font-size: 30px;
+     text-decoration: none;
+     list-style: none;
+     color:white;
+     background-image: url(../img/user_no_pic1.png);
+     background-position: right;
+     background-size: contain;
+     background-repeat: no-repeat;
+     
+}
+
+.log_box_main{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    /* padding-top: 2%; */
+}
+
+.log_out{
+    color:white;
+    padding-top: 2%;
+}
+
+.header_tool{
+    /* margin-top: 2%; */
+    display: block;
+    height: 20%;
+    /* margin-left: 2%; */
+    /* margin-right: 2%; */
+    /* max-width: 1200px; */
+    /* margin: 0 auto; */
+
+}
+
+.header_button{
+    color:white;
+    text-decoration: none;
+    font-size: 60px;
+    font-weight: 300;
+    color: white;
+    vertical-align: middle;
+    text-align: center;
+
+}
+
+.log:hover{
+    text-decoration: underline;
+}
+
+.header_tool ul{
+    list-style: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+    height: 200px;
+    background: #5066B4;
+    margin: 0; 
+}
+.header_tool ul li a:hover{
+    text-decoration: underline;
+    line-height: 5px;
+}
+
+.header_tool ul li{
+    background: none;
+
+}
+
+.container {
+    width: 85%;
+    margin: 0 auto;
+    padding-bottom: 15%;
+    max-width: 1200px;
+    /* padding-bottom: 5px; */
+}
+
+.main_content {
+    /*width: 900px;*/
+    padding-right: 32px;
+    float: left;
+    width: 100% !important;
+    /*padding-right: 0 !important;*/
+    font-size: 16px;
+    padding-left: 15px;
+    padding-bottom: 140px;
+    margin-bottom: 5%;
+}
+
+.main_pictur{
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+    height: 500px;
+    margin-top: 4%;
+    object-fit: cover;
+    object-position: bottom;
+    display: block;
+    object-fit: fill;
+}
+
+.intro{
+    background: #5066B4;
+    border: 2px solid #000000;
+    font-size: 35px;
+    padding: 5vw 10vw;
+    margin-top: 4%;
+
+}
+
+/* Springs.php */
+
+.springs_container{
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    margin-top:5%;
+    padding-bottom: 15%;
+    max-width: 1200px;
+}
+
+.springs_box_left{
+    
+    margin-bottom: 2%;
+}
+.springs_box1{
+    width:100%;
+    background: #5066B4;
+    padding: 1vw 2vw;
+    border: 2px solid #000000; 
+    border-radius: 20px;
+    margin-bottom: 2%;
+}
+
+.springs_search{
+    /* width:100%; */
+    background: #5066B4;
+    padding: 1vw 2vw;
+    border: 2px solid #000000; 
+    border-radius: 20px;
+    margin-bottom: 2%;
+}
+
+.spring_name{
+    color:white;
+    font-size: 30px;
+    width: 97%;
+}
+.spring_name::placeholder{
+    color:white;
+    font-size: 30px;
+}
+
+.springs_box2{
+    width:100%;
+}
+
+.springs_head {
+    font-size: 30px;
+}
+
+.search_button{
+    margin-top:5%;
+    /* height: 200px; */
+    font-size: 50px;
+    border: 2px solid #000000; 
+    border-radius: 20px;
+    width: 100%;
+    cursor: pointer;
+}
+
+/* PC wide */
+@media screen and (min-width: 1100px) {
+    .header_tool{
+        /* margin-top: 2%; */
+        display: block;
+        height: 10%;
+    
+    }
+    .header_tool ul{
+        height: 100px;
+    }
+
+    .header_button{
+        font-size: 40px;    
+    }
+
+    .springs_container{
+        display: flex;
+        flex-direction: row;
+        margin: 0 auto;
+        margin-top:5%;
+        padding-bottom: 15%;
+        max-width: 1200px;
+    }
+
+    .spring_name{
+        color:white;
+        font-size: 22px;
+        width: auto;
+    }
+    .spring_name::placeholder{
+        color:white;
+        font-size: 22px;
+    }
+    .springs_box1{
+        width:100%;
+        background: #5066B4;
+        padding: 1vw 2vw;
+        margin-right: 2%;
+        height: 100%;
+    }
+    .springs_box2{
+        width:70%;
+    }
+    
+    .springs_box_left{
+        width:30%;
+        margin-right: 2%;
+        height: 380px;
+    }
+
+    
+    .search_box{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+
+    .search_button{
+        margin-top:5%;
+        /* height: 200px; */
+        font-size: 22px;
+        border: 2px solid #000000; 
+        border-radius: 20px;
+        width: 100%;
+        cursor: pointer;
+    }
+
+}

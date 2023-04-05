@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!--<link reL=stylesheet HREF="css/main.css">-->
+    <link reL=stylesheet HREF="/css/new.css">
+<title> Главная страница </title>
+</head>
+<body>
+    
+    <?php
+    require_once 'UI/header.php';
+    ?>
+<?php
+    require_once 'UI/footer.php';
+?>
+
+</body>
+</html>
+
+
