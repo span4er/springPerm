@@ -1,6 +1,63 @@
 <?php
+require_once 'configuration.php';
 require_once 'DB.php';
 require_once 'alert.php';
+require_once 'signInHandler.php';
+
+function signUpDb($login, $password, $mail){
+    $query = "INSERT INTO spring_perm.dim_users
+    (user_login, user_password, user_mail, user_role_id)
+    VALUES('$login', '$password', '$mail', 0);";
+
+
+    try {
+        $data = executeSQL($query);
+    } catch (Exception $e) {
+        // return "Не удалось подключиться к Базе данных";
+        return $e;
+    }
+
+    if ($data === TRUE){
+        return true;
+    }
+    else
+        return "Пользователь не найден";
+
+
+
+}
+
+function checkLoginAvailable($login)
+{
+    $query = "SELECT user_login from spring_perm.dim_users where user_login = '$login'";
+    try {
+        $data = executeSQL($query);
+    } catch (Exception $e) {
+       return "Не удалось подключиться к Базе данных";
+        //return $e;
+    }
+
+    if ($data){
+        return 0;
+    }
+    else return 1;
+}
+
+function checkMailAvailable($mail)
+{
+    $query = "SELECT user_mail from spring_perm.dim_users where user_mail = '$mail'";
+    try {
+        $data = executeSQL($query);
+    } catch (Exception $e) {
+       return "Не удалось подключиться к Базе данных";
+        //return $e;
+    }
+
+    if ($data){
+        return 0;
+    }
+    else return 1;
+}
 
 function signUp($login, $password, $mail){
         //Проверка доступности логина и почты
@@ -35,15 +92,21 @@ function signUp($login, $password, $mail){
             $res = signUpDb($login, $pas_hash, $mail);
             if ($res === true)
             {
-                session_start();
+                if(!isset($_SESSION)) 
+                { 
+                    session_start(); 
+                } 
                 $_SESSION['user'] = $login;
                 $alert_message = "Пользователь ".$login." успешно зарегистрирован.";
                 function_alert($alert_message);
-                header("Location:/index.php");
+                header("Location:/index.php?registered=true");
+           
                 die();
             }
 
         $errorMsg = $res;
-        }
+       
+        }        
     }
+    return $errorMsg;
 }

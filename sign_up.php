@@ -7,15 +7,20 @@
     <meta charset="UTF-8">
     <title>Регистрация</title>
 </head>
-<body>
 <?php require_once 'UI/header.php'; ?>
+<body>
 <?php
-
+    require_once 'php/configuration.php';
+    require_once __ROOT__.'\php\get_springs.php';
+    require_once __ROOT__.'\php\alert.php';
  require_once 'php/signInHandler.php';
- require_once 'php/alert.php';
  require_once 'php/signUpHandler.php';
   
   $errorMsg = "";
+
+//   ini_set('display_errors', '1');
+//   ini_set('display_startup_errors', '1');
+//   error_reporting(E_ALL);
 
 if (isset($_SESSION['user']) == true)
 {
@@ -43,50 +48,7 @@ if (isset($_POST['userData_login']) && isset($_POST['userData_password']) && iss
         unset($_POST['userData_password']);
         unset($_POST['userData_mail']);
 
-        signUp($login,$password,$mail);
-        // //Проверка доступности логина и почты
-        // if(!checkLoginAvailable($login))
-        //     {
-        //         $errorMsg = "Введённый логин ";
-        //         $errorMsg .= $login;
-        //         $errorMsg .= " уже занят.";
-        //     }
-        // else if (!checkMailAvailable($mail))
-        //     {
-        //         $errorMsg = "Введённая почта " ;
-        //         $errorMsg .= $mail;
-        //         $errorMsg .= " уже указана для другого пользователя.";
-        //     }
-        // else {
-        //     if (!filter_var($mail, FILTER_VALIDATE_EMAIL)) 
-        //         {
-        //         $errorMsg = "Введите действительный почтовый адрес";
-        //         }
-        //     else if ( !preg_match('/^[A-Za-z0-9]{5,31}$/', $login) )
-        //     {
-        //         $errorMsg = "Логин не должен содержать пробелов и специальных символов и быть длиной не менее 5 и не более 31 символа!!";
-        //     }
-        //     else if ( !preg_match('/^[A-Za-z0-9]{5,31}$/', $password))
-        //     {
-        //         $errorMsg = "Пароль должен быть длиной не менее 5 и не более 31 символа. Допускается писать только буквы и цифры!!";
-        //     }
-        //     else
-        //     {
-        //         $pas_hash = password_hash($password, PASSWORD_DEFAULT);
-        //         $res = signUp($login, $pas_hash, $mail);
-        //         if ($res === true)
-        //         {
-        //             session_start();
-        //             $_SESSION['user'] = $login;
-        //             $alert_message = "Пользователь ".$login." успешно зарегистрирован.";
-        //             function_alert($alert_message);
-        //             header("Location:/index.php?registered=yes");
-        //             die();
-        //         }
-
-        //     $errorMsg = $res;
-        //     }
-        // }
+        $errorMsg = signUp($login,$password,$mail);
     }
 }
 ?>
@@ -97,16 +59,15 @@ if (isset($_POST['userData_login']) && isset($_POST['userData_password']) && iss
            
             <a class = "reg_button" href  = "/log_in.php">ВОЙТИ</a>
             <?php
-                if ($errorMsg !== "")
-                    echo "
+                if ($errorMsg !== "" && !preg_match("%session_start%",$errorMsg)){
+                    ?>
                     <div class='login__error'>
-                        ! $errorMsg <br>
+                        ! <?=$errorMsg?><br>
                     </div>
-                    ";
+                    <?php
+                }
             ?>
-            <!-- <form>
-                <input class = "log_back_button" type="button" value="РЕГИСТРАЦИЯ" onclick="history.back()">
-            </form> -->
+
                 <form class ="log_label_box"  action="sign_up.php" method="post">
                             <label class ="log_label_box_labels" for="login">ЛОГИН:</label>
                             <input id="login" class = "login" name="userData_login" type="text">
