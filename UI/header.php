@@ -25,7 +25,7 @@
         {
                 ?>
                 <div class = "log_box_main"> 
-                        <a href = "/user_loged.php" class = "log"><?php echo $_SESSION['user'] ?></a>
+                        <a href = "/user_loged.php?entity=user" class = "log"><?php echo $_SESSION['user'] ?></a>
                         <a class="log_out" href="?exit=true" name="exit">ВЫЙТИ</a>
                 </div>
                 <?php

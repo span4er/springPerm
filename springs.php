@@ -23,7 +23,6 @@ $offset = ($pageno-1) * $size_page;
 <!DOCTYPE html>
 <html>
 <head>
-<!--<link reL=stylesheet HREF="css/main.css">-->
     <link reL=stylesheet HREF="/resources/styles/main.css">
     <link reL=stylesheet HREF="/resources/styles/auth.css">
     <link reL=stylesheet HREF="/resources/styles/normalize.css">
@@ -100,7 +99,7 @@ $offset = ($pageno-1) * $size_page;
                         center: [<?php echo $spring_data[0]['spring_point']; ?>],
                         zoom: 20
                     }, {
-                        searchControlProvider: 'yandex#search'
+                        // searchControlProvider: 'yandex#search'
                     });
                 
                     var myCollection = new ymaps.GeoObjectCollection(); 

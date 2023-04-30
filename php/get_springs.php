@@ -63,6 +63,7 @@ from
 	spring_perm.data_spring se
 where 
 	se.is_verified = true
+    order by se.spring_name
     LIMIT $offset, $size_page";
 
 
@@ -113,7 +114,31 @@ function get_one_spring($spring_id)
 
 }
 
+function get_one_spring_pic($spring_id){
+    $query = "SELECT 
+                image_id,
+                image_path
+            from 
+            spring_perm.map_image2spring
+            where spring_id = $spring_id
+            and is_verified = 1";
+    try {
+    $data = executeSQL($query);
+    } catch (Exception $e) {
+    return "Не удалось подключиться к Базе данных";
+    //return $e;
+    }
 
+    if ($data){
+        return $data;       
+    }   
+    else 
+    {   
+        return null;
+    }
+
+
+}
 
 
 

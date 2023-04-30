@@ -1,8 +1,8 @@
 <?php
 require_once 'configuration.php';
-require_once 'DB.php';
-require_once 'alert.php';
-require_once 'signInHandler.php';
+require_once __ROOT__.'\php\DB.php';
+require_once __ROOT__.'\php\alert.php';
+require_once __ROOT__.'\php\signInHandler.php';
 
 function signUpDb($login, $password, $mail){
     $query = "INSERT INTO spring_perm.dim_users
@@ -63,7 +63,7 @@ function signUp($login, $password, $mail){
         //Проверка доступности логина и почты
         if(!checkLoginAvailable($login))
         {
-            $errorMsg = "Введёнsный логин ";
+            $errorMsg = "Введённый логин ";
             $errorMsg .= $login;
             $errorMsg .= " уже занят.";
         }

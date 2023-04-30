@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<!--<link reL=stylesheet HREF="css/main.css">-->
     <link reL=stylesheet HREF="/resources/styles/main.css">
     <link reL=stylesheet HREF="/resources/styles/normalize.css">
-
 <title> Главная страница </title>
 <?php require_once 'UI/header.php'; ?>
 
@@ -15,6 +13,7 @@
         require_once __ROOT__.'\php\get_springs.php';
         require_once __ROOT__.'\php\alert.php';
         require_once __ROOT__.'\php\comments.php';
+        require_once __ROOT__.'\php\userHandler.php';
 
         ini_set('display_errors', '1');
         ini_set('display_startup_errors', '1');
@@ -31,12 +30,13 @@
         } 
 
         $comments_data =null;
-
+        $spring_pics_data = null;
         if (isset($_GET['spring']))
         {   
             $spring_id = $_GET['spring'];
             $spring_data = get_one_spring($spring_id);      
-            $comments_data = get_all_comments($spring_id);       
+            $comments_data = get_all_comments($spring_id);     
+            $spring_pics_data = get_one_spring_pic($spring_id); 
         }
         if(isset($_POST['comment_text']) && strlen($_POST['comment_text']) > 0)
         {
@@ -52,8 +52,35 @@
 
         ?>
 <div class ="container">
-    <h1 style="text-indent: 40px;" class = "spring_head"><?=$spring_data[0]['spring_name'] ?></h1>
-    <img class = "main_pictur" src = "/resources/img/indexImag.png">
+    <h1  class = "spring_head"><?=$spring_data[0]['spring_name'] ?></h1>
+    <div class="slideshow-container">
+        <ul class ="holdit">
+        <li class ="prev">
+            <a onclick="plusSlides(-1)">&#10094;</a>
+        </li>
+        <li class = "middle">
+        <?php if($spring_pics_data) {foreach ($spring_pics_data as $row){?>
+
+            <div class = "mySlides fade">
+                <img class ="slide_pictur" src ="<?=$row['image_path']?>">
+            </div> 
+        <?php 
+        }}
+        else {?>
+         <div class = "mySlides fade">
+                <img class ="slide_pictur" src ="/resources/img/springs_pics/spring_default.jpg">
+            </div> 
+            <?php }?>
+        </li>
+        <li class = "next">
+            <a onclick="plusSlides(1)">&#10095;</a>
+        </li>
+         </ul>
+    </div>
+  
+    <script src="/resources/js/slides.js"></script>
+    
+   
     <div style="text-indent: 40px;" class = "intro">
             <?=$spring_data[0]['spring_description']; ?>
     </div>
@@ -67,7 +94,7 @@
         <?php 
         if (isset($_SESSION['user']) == true){
             ?>
-            <textarea id="com_text" placeholder = "Напишите свой комментарий"  class = "comment_text" name="comment_text" type="text" maxlength=300 rows = 7></textarea>
+            <textarea id="com_text" placeholder = "Напишите свой комментарий"  class = "comment_text" name="comment_text" type="text" maxlength=300 rows = 7  required></textarea>
             <input type="hidden" name="comment_user_id" value="<?=$_SESSION['user']?>">
             <input type="hidden" name="comment_spring_id" value="<?=$spring_id?>">
             <input name="submit" class="comment_send" type="submit" value = "Отправить">
@@ -80,18 +107,19 @@
         <?php 
     }?>
 
-    <?php if($comments_data) {foreach ($comments_data as $row){?>
+    <?php if($comments_data) {foreach ($comments_data as $row){
+        $user_data = get_user_data($row['user_login']);
+        ?>
     <div class = "user_comments">
         <div class = "user_left">
-             <img class = "user_pic" src = "<?= //__ROOT__."\\resources\img\\".$row['user_pic_name']
-                                                 "/resources/img/user_pics/".$row['user_pic_name'];
-             ?>">
+                <img class = "user_pic" src = "<?="/resources/img/user_pics/".$user_data[0]['user_pic_name'];
+                ?>">
              <a class = "user_comment_name"><?=$row['user_login']?></a>
              <a class = "user_comment_date"><?=$row['created_dttm']?></a>
         </div>
-        <!-- <td style="background-image: url(<?= $row['css_class'] ?>); background-repeat: no-repeat;background-position: center;"></td> -->
-        <div class = "user_text">
-            <p><?=$row['comment_text']?></p>
+        <div class = "comment_text">           
+            <!-- <p><?=$row['comment_text']?></p> -->
+            <textarea readonly class = "user_text" rows = 6><?=$row['comment_text']?></textarea>
         </div>
     </div>
     <?php }}?>

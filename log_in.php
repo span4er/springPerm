@@ -61,9 +61,9 @@ if (isset($_POST['userData_login']) && isset($_POST['userData_password'])){
             ?>
                 <form class ="log_label_box"  action="log_in.php" method="post">
                             <label class ="log_label_box_labels" for="login">ЛОГИН:</label>
-                            <input id="login" class = "login" name="userData_login" type="text">
+                            <input id="login" class = "login" name="userData_login" type="text"  required>
                             <label class ="log_label_box_labels" for="password">ПАРОЛЬ:</label>
-                            <input id="password" class = "password" name="userData_password" type="password">
+                            <input id="password" class = "password" name="userData_password" type="password"  required>
                             <input name="submit" class="submit_button" type="submit" value = "ВОЙТИ">
                     </form>      
         </div>            

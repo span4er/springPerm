@@ -15,104 +15,95 @@
     ?>
 
 <?php
-    require_once 'php/DB.php';
-    require_once 'php/str_includes.php';
-    require_once 'php/validateStr.php';
-    require_once 'php/isLoggedIn.php';
-    require_once 'php/drawTable.php';
-    //session_start();
-    // if (!isset($_SESSION["user"])) //Проверяем условия для входа
-    // {
-    //     header("Location:/admin/admin.php?denied=true");
-    //     die();
-    // }
+    require_once 'php\configuration.php';
+    require_once __ROOT__.'\php\DB.php';
+    require_once __ROOT__.'\php\alert.php';   
+    require_once __ROOT__.'\php\userHandler.php';
 
-
+           
+    ini_set('display_errors', '1');
+    ini_set('display_startup_errors', '1');
+    error_reporting(E_ALL);
     $errorMsg = "";
-
+ if (!isset($_SESSION["user"])) //Проверяем условия для входа
+    {
+        header("Location:/index.php");
+        die();
+    }
     if(isset($_GET['exit'])) 
     {
         unset($_SESSION['user']);
         session_destroy();
         header("Location:/index.php");
         die();
-        //$table = $_GET['table'];
     }
 
+    $user_data =  get_user_data($_SESSION['user']);
+    if($_GET['entity'] == "user" && isset($_SESSION['user'])){
+        if(isset($_POST["img_update"])){
+            if(isset($_FILES['img_file']) && $_FILES['img_file'] !=""){ 
+                $img_outcome = update_user_img($_FILES['img_file'], $user_data);
+                if($img_outcome == "Nope")
+                {
+                    header("Location:/user_loged.php?entity=user");
+                }
+                else 
+                    {
+                        $errorMsg = $img_outcome;
+                    }
+                }
+            }
+        }
 
 ?>
 
+<div class = "container">
 <div class = "container_admin">
 
 <div class="admin-sidebar" style = "margin-left:2%">
    <h3 class="admin-bar-menu" >Меню</h3>
-    <a class="admin-bar-item admin-button" href="?table=admin" name="tabl" value="Администраторы">Администраторы</a><br>
-    <a class="admin-bar-item admin-button" href="?table=emp" name="tabl" value="Сотрудники"> Сотрудники</a><br>
-    <a class="admin-bar-item admin-button" href="?table=insur" name="tabl" value="Страхование">Страхование </a><br>
-    <a class="admin-bar-item admin-button" href="?exit=true" name="exit" value="Страхование">Выйти </a><br>
+    <a class="menu_button" href="?entity=user" name="user" value="Администраторы">Аккаунт</a><br>
+    <a class="menu_button" href="?entity=spring" name="spring" value="Сотрудники">Добавить родник</a><br>
+    <a class="menu_button" href="?exit=true" name="exit">Выйти </a><br>
 </div>
 <div class = "main_content">
-<form action = "admin_loged.php?toDelete=yes" method = "POST">
-<table class = "all_table">
-        <caption></caption>
-        <?php
-                echo draw_table($DB_arr,$table);
-        ?>    
-        <input class="admin-bar-item admin-button " type = "submit" value = "Удалить выбранные записи">
-</form>
-        <div class = "admin_block">
-        <div class = "block_insert">
-        <form action = "admin_loged.php" method = "POST">
-    <?php
-
-    $htmlString1 = "";
-    foreach ($header as $key => $value) {
-                $htmlString1 .= "<label class =\"admin_label\" for=\"$key\">$key </label>";                
-                $htmlString1 .= "<input id = $key name =\"newRow[$key]\" class = \"\" type = \"text\"><br>";
+            <?php
+            if ($errorMsg !== "" && !preg_match("%session_start%",$errorMsg)){
+                ?>
+                <div class='login__error'>
+                    ! <?=$errorMsg?><br>
+                </div>
+                <?php
             }
-            $htmlString1 .= "<input name=\"table\" type=\"hidden\" value=\"$table\">";
-            $htmlString1 .= "<input class=\"admin-bar-item admin-button \" type = \"submit\" value = \"Добавить запись\">";
-            echo "$htmlString1";
-    ?>    
-    </form>    
-     </div>
-     <div class = "block_update">
-        <form action = "admin_loged.php?toUpdate=yes" method = "POST">
-    <?php
+        ?>
+        <?php if ($_GET['entity'] == "user"){ ?>
+        <h1  class = "spring_head"><?=$user_data[0]['user_login']?></h1>
+        <img class = "user_pic_acc" src = "<?= //__ROOT__."\\resources\img\\".$row['user_pic_name']
+                                                "/resources/img/user_pics/".$user_data[0]['user_pic_name'];
+            ?>">
+        <form name="user_img" method="POST" action="/user_loged.php?entity=user" enctype="multipart/form-data">
+        <input type="file" value="" name="img_file">
+        <input type="submit" value="Обновить аватар" name="img_update">
+        </form>
+        <p>Логин пользователя: <span><?= $user_data[0]['user_login']?></span></p>
+        <p>e-mail пользователя: <span><?= $user_data[0]['user_mail']?></span></p>
+        <?php }  
+        else if ($_GET['entity'] == "spring"){ ?>
+        <form class ="spring_add_box"  action="user_loged.php" method="post" enctype="multipart/form-data">
+                        <label class ="log_label_box_labels" for="login">Название:</label>
+                        <input id="login" class = "login" name="userData_login" type="text"  required>
+                        <label class ="log_label_box_labels" for="password">Широта долгота:</label>
+                        <input id="password" class = "password" name="userData_password" type="password"  required>
+                        <label class ="log_label_box_labels" for="password">Описание:</label>
+                        <input id="imgs" class = "imgs" name="springData_imgs[]" multiple type="file">
+                        <input name="submit" class="submit_button" type="submit" value = "Отправить на рассмотрение">
+                </form>   
+        <?php } ?>
 
-    $htmlString1 = "";
-    $main_colt = "";
-    $counter = 0;
-    foreach ($header as $key => $value) {
-        if($counter ==0 ) $main_colt = $key;
-                $htmlString1 .= "<label class =\"admin_label\" for=\"$key\">$key </label>";                
-                $htmlString1 .= "<input id = $key name =\"updateRow[$key]\" class = \"\" type = \"text\"><br>";
-                $counter = $counter + 1;
-            }
-            $htmlString1 .= "<input name=\"table\" type=\"hidden\" value=\"$table\">";
-            $htmlString1 .= "<input name=\"main_col\" type=\"hidden\" value=\"$main_colt\">";
-            $htmlString1 .= "<input class=\"admin-bar-item admin-button \" type = \"submit\" value = \"Изменить запись\">";
-            echo "$htmlString1";
-    ?>    
-    </form>    
-    </div>
-    <?php
-                if ($errorMsg !== "")
-                    echo "
-                    <div class='login__error'>
-                        ! $errorMsg <br>
-                    </div>
-                    ";
-            ?>
-</div>
 
 </div>
-        </div>
-
-<?php
-    require_once '../UI/footer.php';
-?>
-
+</div>
+</div>
 </body>
 </html>
 

@@ -309,6 +309,7 @@ body{
     display: flex;
     flex-direction: row;
     padding: 5vw 5vw;
+    height: 200px;
 }
 
 .user_left{
@@ -342,6 +343,188 @@ body{
 
 
 
+.slideshow-container {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 2%;
+    width: 80%;
+    height: 500px;
+    margin-top: 4%;
+    object-fit: cover;
+    object-position: bottom;
+    /* display: block; */
+    object-fit: fill;
+
+    
+  }
+  
+
+  .slide_pictur{
+    /* margin-left: 5%;
+    margin-right: 5%;
+    margin-bottom: 2%;
+    width: 80%;
+    height: 500px;
+    object-fit: cover;
+    object-position: bottom;
+    display: block;
+    object-fit: fill; */
+    /* margin-left: 5%; */ 
+    /* margin-right: 5%; */
+    margin-bottom: 2%;
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+    object-position: bottom;
+    display: block;
+    object-fit: fill;
+}
+
+.holdit{
+    display: flex;
+    flex-direction: row;
+    list-style:none;
+    margin-block-start: 0;
+    margin-block-end: 0;
+    padding-inline-start: 0;
+}
+  /* Hide the images by default */
+  .mySlides {
+      display: none;
+  }
+.prev, .next {
+    cursor: pointer;
+    list-style: none;
+    /* position: absolute; */
+    /* top: 50%; */
+    width: 5%;
+    margin-top:30%;
+    /* width: auto; */
+     /* margin-top: -22px;  */
+    padding: 16px; 
+    text-align:center;
+    vertical-align: middle;
+    color: white;
+    font-weight: bold;
+    font-size: 50px;
+    transition: 0.6s ease;
+    border-radius: 0 3px 3px 0;
+  }
+
+.middle{
+    width: 90%;
+}
+
+
+  .next {
+    right: 20%;
+    border-radius: 3px 0 0 3px;
+  }
+
+  /* Fading animation */
+.fade {
+    -webkit-animation-name: fade;
+    -webkit-animation-duration: 1.5s;
+    animation-name: fade;
+    animation-duration: 1.5s;
+  }
+  
+  @-webkit-keyframes fade {
+    from {opacity: .4}
+    to {opacity: 1}
+  }
+  
+  @keyframes fade {
+    from {opacity: .4}
+    to {opacity: 1}
+  }
+
+
+
+.admin-sidebar{
+    border-width: 2px;
+    border-right: white;
+    border-right: solid;
+    width: 20%;
+
+}
+  
+.admin-bar-menu {
+    /* width: 100%; */
+    display: block;
+    text-align: center;
+    border: none;
+    white-space: normal;
+    float: none;
+    outline: 0;
+    color:white;
+    width: 100%;
+}
+
+.admin-bar-item {
+    /* width: 100%; */
+    display: block;
+    padding: 8px 16px;
+    text-align: center;
+    border: none;
+    white-space: normal;
+    float: none;
+    outline: 0;
+    color:black;
+    width: 100%;
+    cursor:pointer;
+    background-color: buttonface;
+
+
+}
+
+.admin-bar-item:hover{
+    text-decoration: underline;
+}
+
+.container_admin {
+    /* max-width: 1300px; */
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    background-color: #5066B4;
+    min-height: 600px;
+    /* padding-bottom: 5px; */
+}
+
+.menu_button{
+    color:white;
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: 300;
+    vertical-align: middle;
+    text-align: center;
+
+}
+.menu_button:hover{
+    text-decoration: underline;
+    line-height: 5px;
+}
+
+.menu_button{
+    background: none;
+
+}
+
+.user_pic_acc {
+    /* height: 300px;
+    width: 400px; */
+    height: 250px;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    object-fit: cover;
+    object-position: bottom;
+    display: block;
+    object-fit: fill;
+    
+}
+
 /* PC wide */
 @media screen and (min-width: 1100px) {
     .header_tool{
@@ -356,6 +539,14 @@ body{
 
     .header_button{
         font-size: 40px;    
+    }
+
+    .container {
+        width: 65%;
+        margin: 0 auto;
+        padding-bottom: 15%;
+        max-width: 1200px;
+        /* padding-bottom: 5px; */
     }
 
     .springs_container{
@@ -394,6 +585,13 @@ body{
         height: 380px;
     }
 
+    .spring_tab a{
+        font-size:20px;
+    }
+
+    .springs_head {
+        font-size: 40px;
+    }
     
     .search_box{
         display: flex;
@@ -410,11 +608,31 @@ body{
         width: 100%;
         cursor: pointer;
     }
-
+    .comment_text_blocked, .comment_text, .user_text {
+        font-size: 25px;
+        resize:none;
+    }
     .spring_pagination{
         /* width:100%; */
         font-size: 15px;
   
+    }
+
+    .prev, .next {
+
+        /* width: 5%; */
+        margin-top:23%;
+
+    }
+    .comment_text_blocked{
+        color:red;
+        width: 80%;
+        resize:none;
+        font-size: 25px;
+    }
+    .intro{
+        font-size: 25px;
+        padding: 5vw 7vw;
     }
 
 }

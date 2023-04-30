@@ -70,11 +70,11 @@ if (isset($_POST['userData_login']) && isset($_POST['userData_password']) && iss
 
                 <form class ="log_label_box"  action="sign_up.php" method="post">
                             <label class ="log_label_box_labels" for="login">ЛОГИН:</label>
-                            <input id="login" class = "login" name="userData_login" type="text">
+                            <input id="login" class = "login" name="userData_login" type="text"  required>
                             <label class ="log_label_box_labels" for="password">ПАРОЛЬ:</label>
-                            <input id="password" class = "password" name="userData_password" type="password">
+                            <input id="password" class = "password" name="userData_password" type="password"  required>
                             <label class ="log_label_box_labels" for="password">E-MAIL:</label>
-                            <input id="mail" class = "mail" name="userData_mail" type="mail">
+                            <input id="mail" class = "mail" name="userData_mail" type="mail"  required>
                             <input name="submit" class="submit_button" type="submit" value = "ЗАРЕГИСТРИРОВАТЬСЯ">
                     </form>      
         </div>            
