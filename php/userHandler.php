@@ -63,3 +63,24 @@ function update_user_img($file, $user_data){
     }
     return $errorMsg;	
 }
+
+
+function get_user_role($login){
+        $sqlString = "SELECT
+        user_id,
+        user_role_id
+        from 
+        spring_perm.dim_users se
+        where user_login = '".$login."'";
+    try {
+        $data = executeSQL($sqlString);
+    } catch (Exception $e) {
+    //return "Не удалось подключиться к Базе данных";
+        return $e;
+    }
+
+    if ($data){
+        return $data;       
+    }
+    else return ;
+}

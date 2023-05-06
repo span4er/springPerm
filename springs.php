@@ -87,11 +87,8 @@ $offset = ($pageno-1) * $size_page;
         </ul> 
 </div>
         <div class = "springs_box2">
-           <!-- <script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3Ac23980264113b77ac4418a28a68717c7cbdc074c09288c44801ff6693bca55b4&amp; -->
-            <!-- width=100%&amp;height=500&amp;lang=ru_RU&amp;scroll=true"></script> -->
-            <div id="map" style="width: 100%; height:800px"></div>
+            <div id="map" style="width: 100%; height:600px"></div>
             <script src="https://api-maps.yandex.ru/2.1/?lang=ru-RU"  type="text/javascript"></script>
-    </style>
             <script type="text/javascript">
                ymaps.ready(init);
                 function init() {

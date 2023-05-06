@@ -39,7 +39,15 @@
                 <?php
         }
             ?>
-           
+            <li>
+            <img class ="footer_logo" src ="/resources/img/logo.svg">
+            <img class ="footer_logo" src ="/resources/img/ЛоготипПГУ.png">
+        </li>
+        <!-- </li> -->
+        <!-- <li>
+            <a>Дата и время последнего изменения страницы:
+                29.09.2022 г.</a> -->
+        <!-- <li >           -->
 </ul>
 </div>
 </header>

@@ -18,6 +18,7 @@ join
 	on du.user_id = uc.user_id 
 where 
 	uc.spring_id = $spring_id
+    and coalesce(uc.is_deleted,0) <> 1
 order by uc.created_dttm ASC";
 
 
@@ -56,6 +57,21 @@ function upload_comments($user_id, $spring_id, $comment_text){
     }
 
 
+}
+
+function delete_comment($comment_id){
+
+    $query = "UPDATE spring_perm.data_user_comment uc
+                set is_deleted = 1
+                where uc.comment_id = $comment_id";
+
+    // return $query;
+    try {
+        $DB_arr1 = executeSQL($query);
+        return '1';
+    } catch (Exception $e) {
+        return $e;
+    }
 }
 
 ?>
