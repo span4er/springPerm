@@ -40,6 +40,16 @@
     }
 
     $user_data =  get_user_data($_SESSION['user']);
+    $quality_data = get_dim_quality();
+    $user_role = null;
+    $user_roles = null;
+    $bit = null;
+
+    if (isset($_SESSION['user']) == true){
+        $user_role = get_user_role($_SESSION['user']);
+        $user_role = $user_role[0]['user_role_id'];
+    }
+
     if($_GET['entity'] == "user" && isset($_SESSION['user'])){
         if(isset($_POST["img_update"])){
             if(isset($_FILES['img_file']) && $_FILES['img_file'] !=""){ 
@@ -60,7 +70,33 @@
         function_alert("Родник отправлен на утверждение");
     }
 
+   
+    if($_GET['entity'] == "super" && isset($_SESSION['user'])){
+            $user_roles =  get_users_roles();
+    }
 
+    if(isset($_POST['user_id'])){
+        $up_outcome = update_role_super($_POST['user_id']);
+        if($up_outcome == "Nope")
+        {
+            header("Location:/user_loged.php?entity=super");
+        }
+        else 
+            {
+                $errorMsg = $up_outcome;
+            }     
+    }
+    if(isset($_POST['decline_user_id'])){
+        $d_outcome = decline_role_super($_POST['decline_user_id']);
+        if($d_outcome == "Nope")
+        {
+            header("Location:/user_loged.php?entity=super");
+        }
+        else 
+            {
+                $errorMsg = $d_outcome;
+            }     
+    }
 
     if(isset($_POST['springData_name']) && strlen(ltrim($_POST['springData_name'])) > 0){
         if ( !preg_match("/[^а-яё ]/i", $_POST['springData_name']))
@@ -103,6 +139,7 @@
    <h3 class="admin-bar-menu" >Меню</h3>
     <a class="menu_button" href="?entity=user" name="user" value="Администраторы">Аккаунт</a><br>
     <a class="menu_button" href="?entity=spring" name="spring" value="Сотрудники">Добавить родник</a><br>
+    <?php if($user_role == '100' || $user_role == '99') {?><a class="menu_button" href="?entity=super" name="spring" value="Сотрудники">Роли пользователей</a><br><?php } ?>
     <a class="menu_button" href="?exit=true" name="exit">Выйти </a><br>
 </div>
 <div class = "main_content">
@@ -150,14 +187,70 @@
                         <input id="coordinates_latitud" name="springData_lat" type="text"  required>                                                                                       
                         <label class ="add_spring_label_box_labels" for="description">Описание:</label>
                         <textarea id="description" class = "description" name="springData_description" type="text" maxlength=800 rows = 7  required></textarea>
+                        <label class ="add_spring_label_box_labels" for="springData_imgs[]">Добавьте изображения:</label>
                         <input id="imgs" class = "imgs" name="springData_imgs[]" multiple type="file">
                         <select form ="add_spring" class = "select_drink" name="springData_quality" required="required">
-                        <option value="1">Рекомендуется кипитить воду</option>
-                        <option value="2">Вода подлежит обязательному кипичению</option>
+                        <?php foreach ($quality_data as $row){ ?>
+                        <option value="<?=$row['quality_id']?>"><?=$row['quality_name']?></option>
+                        <?php } ?>
+                        <!-- <option value="2">Вода подлежит обязательному кипичению</option> -->
                         </select>
-                        <input name="submit" class="submit_button" type="submit" value = "Отправить на рассмотрение">
+                        <input name="submit" class="submit_button" style="font-size:30px" type="submit" value = "Отправить на рассмотрение">
                 </form>   
-        <?php } ?>
+        <?php } 
+        else if ($_GET['entity'] == "super" && ($user_role == '99' || $user_role == '100')){  
+            echo $bit;
+            ?><h1 class="spring_head" >Редактирование роли пользователей</h1>
+            <table class = "spring_head" style = "width:100%">
+            <thead style="font-size:25px;" >
+                <tr>              
+                    <th>Логин</th>
+                    <th>Роль</th>
+                    <th></th>
+                </tr>
+            </thead> 
+            <?php
+            foreach($user_roles as $row){?>         
+            <tr class = "spring_tab"  style="font-size:15px;">
+            <script type="text/javascript">
+                        function proverka1(name) {
+                            if (confirm("Наделить пользователя " + name + " правами суперпользователя?")) {                                    
+                                let form = document.getElementById('change_role');
+                                form.submit();
+                            } else {
+                                return false;
+                            }
+                        }
+                        function proverka_decline(name) {
+                            if (confirm("Убрать у пользователя " + name + " права суперпользователя?")) {                                    
+                                let form = document.getElementById('decline_role');
+                                form.submit();
+                            } else {
+                                return false;
+                            }
+                        }
+                    </script>
+                <td style="width:20%;"><?=$row['user_login']?></td>
+                <td style="width:20%;"><?=$row['user_role_name']?></td>
+                        <td style="width:20%;">
+                        <form id = "change_role" action="user_loged.php?entity=super" method="post" enctype="multipart/form-data">
+                        <input class="" name="user_id" style="font-size:30px" type="hidden" value = "<?=$row['user_id']?>">
+                        <button style="font-size:15px;" <?php if($row['user_role_id'] == 99 || $row['user_role_id'] == 100) echo 'disabled ';?>onclick="return proverka1('<?=$row['user_login']?>');">Наделить правами суперпользователя</button>     
+                    </form>
+                    </td>
+                    <td style="width:20%;">
+                        <form id = "decline_role" action="user_loged.php?entity=super" method="post" enctype="multipart/form-data">
+                        <input class="" name="decline_user_id" style="font-size:30px" type="hidden" value = "<?=$row['user_id']?>">
+                        <button style="font-size:15px;" <?php if($row['user_role_id'] == 0 || $row['user_role_id'] == 100) echo 'disabled ';?>onclick="return proverka_decline('<?=$row['user_login']?>');">Убрать права суперпользователя</button>     
+                    </form>
+                    </td>
+                    </tr>        
+        <?php } }
+        else {?>
+            <p class = "spring_head" style ="color:red" >Нет доступа</p>
+            <?php } ?>
+        </table>
+
 
 
 </div>

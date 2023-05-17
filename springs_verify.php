@@ -1,24 +1,4 @@
-<?php
-    require_once 'php/configuration.php';
-    require_once __ROOT__.'\php\get_springs.php';
-    require_once __ROOT__.'\php\alert.php';
-    require_once __ROOT__.'\php\userHandler.php';
-    $spring_data = get_all_springs_main_map();
-    // Поверка, есть ли GET запрос
-    if (isset($_GET['pageno'])) {
-        // Если да то переменной $pageno присваиваем его
-        $pageno = $_GET['pageno'];
-    } else { // Иначе
-        // Присваиваем $pageno один
-        $pageno = 1;
-    }
- 
-// Назначаем количество данных на одной странице
-$size_page = 5;
-// Вычисляем с какого объекта начать выводить
-$offset = ($pageno-1) * $size_page;
-    
-    ?>
+
 
 <!DOCTYPE html>
 <html>
@@ -31,8 +11,40 @@ $offset = ($pageno-1) * $size_page;
 </head>
 <body>
 <?php require_once 'UI/header.php'; ?>
+<?php
+    require_once 'php/configuration.php';
+    require_once __ROOT__.'\php\get_springs.php';
+    require_once __ROOT__.'\php\alert.php';
+    require_once __ROOT__.'\php\userHandler.php';
+
+    $spring_data = get_springs_to_verify();
+    // Поверка, есть ли GET запрос
+    if (isset($_GET['pageno'])) {
+        // Если да то переменной $pageno присваиваем его
+        $pageno = $_GET['pageno'];
+    } else { // Иначе
+        // Присваиваем $pageno один
+        $pageno = 1;
+    }
+    $user_role = -1;
+
+    if (isset($_SESSION['user']) == true){
+        $user_role = get_user_role($_SESSION['user']);     
+        $user_role = $user_role[0]['user_role_id']; 
+    }
+
+
+ 
+// Назначаем количество данных на одной странице
+$size_page = 5;
+// Вычисляем с какого объекта начать выводить
+$offset = ($pageno-1) * $size_page;
+    
+    ?>
 <div class ="container">
-    <div class = "springs_container">
+<?php if($user_role == '99' || $user_role == '100'){ ?>
+<h1  class = "spring_head">Родники для утверждения</h1>
+    <div class = "springs_container">    
         <div class ="springs_box_left">
             <div class = "springs_search">
             <form class ="search_box"  action="springs.php" method="post">
@@ -47,36 +59,26 @@ $offset = ($pageno-1) * $size_page;
                 </tr>
             </thead>
             <?php
-                 $user_role = null;
-
-                 if (isset($_SESSION['user']) == true){
-                     $user_role = get_user_role($_SESSION['user']);
-                     $user_role = $user_role[0]['user_role_id'];
-                 }
-         
-                // Отправляем запрос для получения количества элементов
-                $result = get_count_springs(0);
-                // Получаем результат
+                $result = get_count_springs(1);
+                if($result[0]['count_springs'] > 0){
                 $total_rows = $result[0]['count_springs'];
-                // Вычисляем количество страниц
                 $total_pages = ceil($total_rows / $size_page);
-                // Создаём SQL запрос для получения данных
-                // Отправляем SQL запрос
-                $res_data = get_outset_springs($offset, $size_page,0);
-                // Цикл для вывода строк
+                $res_data = get_outset_springs($offset, $size_page,1);
                 foreach ($res_data as $row){
-                    // Выводим логин пользователя
                     ?>
                      <tr class = "spring_tab">
                         <td >
-                        <a  href="/spring_selected.php?spring=<?=$row['spring_id']?>" ><?= $row['spring_name']?></a>
+                        <a  href="/spring_selected_verify.php?spring=<?=$row['spring_id']?>" ><?= $row['spring_name']?></a>
                     </td>
                     </tr>
                     <?php 
                 }
-                // Закрываем соединение с БД
-                ?>
-            
+            }
+            else {?><tr class = "spring_tab">
+            <td ><a>Родников для утверждения нет</a>      
+            </td>
+                    </tr>     
+                    <?php }?>         
         </table>
         <ul class="spring_pagination">
             <li><a href="?pageno=1">Первая ст.</a></li>
@@ -92,12 +94,6 @@ $offset = ($pageno-1) * $size_page;
             </li>
             <li><a href="?pageno=<?php echo $total_pages; ?>">Последняя ст.</a></li>
         </ul> 
-        <?php if($user_role == '99' || $user_role == '100'){?>
-            <div class = "springs_search">
-            <a class = "verify_button" href="/springs_verify.php">Утверждение родников</a>
-            </div>
-        <?php }?>
-
 </div>
         <div class = "springs_box2">
             <div id="map" style="width: 100%; height:600px"></div>
@@ -109,7 +105,6 @@ $offset = ($pageno-1) * $size_page;
                         center: [<?php echo $spring_data[0]['spring_point']; ?>],
                         zoom: 20
                     }, {
-                        // searchControlProvider: 'yandex#search'
                     });
                 
                     var myCollection = new ymaps.GeoObjectCollection(); 
@@ -118,7 +113,7 @@ $offset = ($pageno-1) * $size_page;
                     var myPlacemark = new ymaps.Placemark([
                         <?php echo $row['spring_point']; ?>
                     ], {
-                        balloonContentHeader: '<?= "<a class = \"spring_title_map\"  href=\""."/spring_selected.php?spring=".$row['spring_id']."\" >".$row['spring_name']."</a>" ?>',
+                        balloonContentHeader: '<?= "<a class = \"spring_title_map\"  href=\""."/spring_selected_verify.php?spring=".$row['spring_id']."\" >".$row['spring_name']."</a>" ?>',
                     }, {
                         preset: 'islands#icon',
                         iconColor: '#0000ff',
@@ -133,11 +128,14 @@ $offset = ($pageno-1) * $size_page;
                 
                     myMap.geoObjects.add(myCollection);
                     
-                    // Сделаем у карты автомасштаб чтобы были видны все метки.
                     myMap.setBounds(myCollection.getBounds(),{checkZoomRange:true, zoomMargin:9});
                 }
             </script>
         </div>
+        <?php }
+        else {?>
+        <p class = "spring_head" style ="color:red" >Нет доступа</p>
+        <?php } ?>
     </div>
 </div>
 </body>

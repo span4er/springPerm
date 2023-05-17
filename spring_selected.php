@@ -22,6 +22,7 @@
         $spring_data = array(array(
             "spring_name" => "Не выбран",
             "spring_description" => "Выберите родник на карте",
+            "quality_name" => "Пусто"
         ));
 
         if(!isset($_SESSION)) 
@@ -41,9 +42,18 @@
         if (isset($_GET['spring']))
         {   
             $spring_id = $_GET['spring'];
-            $spring_data = get_one_spring($spring_id);      
-            $comments_data = get_all_comments($spring_id);     
-            $spring_pics_data = get_one_spring_pic($spring_id); 
+            $spring_data = get_one_spring($spring_id,0);
+            if($spring_data[0]['spring_name'] != "Не выбран"){
+                $comments_data = get_all_comments($spring_id);     
+                $spring_pics_data = get_one_spring_pic($spring_id,0); 
+            }
+            else{
+                $spring_data = array(array(
+                    "spring_name" => "Родник не существует или в стадии проверки",
+                    "spring_description" => "Выберите родник на карте",
+                    "quality_name" => "Пусто"
+                ));
+            }
         }
         if(isset($_POST['comment_text']) && strlen($_POST['comment_text']) > 0)
         {
@@ -56,7 +66,7 @@
             header("Location:/spring_selected.php?spring=".$spring_id);
         }
 
-        if(isset($_GET['toDelete']) && isset($_POST['id']) && $user_role == '99'){
+        if(isset($_POST['id']) && ($user_role == '99' || $user_role == '100')){
             $id = $_POST['id'];
             unset($_POST['id']);
             $is_deleted = delete_comment($id);            
@@ -103,15 +113,47 @@
     <div class = "drinking_how">
             <p style="color:red;text-align:center"><?=$spring_data[0]['quality_name']; ?></p>
     </div>
+    <table class = "spring_head" style = "width:100%">
+            <thead style="font-size:25px;" >
+                <tr>              
+                    <th>Дата</th>
+                    <th>Кем проведено исследование</th>
+                    <th>Просмотреть экспертизу</th>
+                    <th>
+                    <form class="hide-submit" method='post'>    
+                    <label >
+            <input class = "user_input" type="file" value="Изображение аватара" name="img_file">
+            <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.88 122.88" width="40px" height="40px"><title>add</title><path d="M61.44,0A61.46,61.46,0,1,1,18,18,61.25,61.25,0,0,1,61.44,0ZM88.6,56.82v9.24a4,4,0,0,1-4,4H70V84.62a4,4,0,0,1-4,4H56.82a4,4,0,0,1-4-4V70H38.26a4,4,0,0,1-4-4V56.82a4,4,0,0,1,4-4H52.84V38.26a4,4,0,0,1,4-4h9.24a4,4,0,0,1,4,4V52.84H84.62a4,4,0,0,1,4,4Zm8.83-31.37a50.92,50.92,0,1,0,14.9,36,50.78,50.78,0,0,0-14.9-36Z"/></svg>                </label>
+        </th>
+        </form>
+                </tr>
+            </thead> 
+            <tr class = "spring_tab"  style="font-size:25px;">
+                <td>2022-08-12</td>
+                <td>«НОВОГОР-Прикамье»</td>
+                        <td style="width:10%;">
+                        <a style="background: url('/resources/pdf/Диплом Хомутов.pdf'); font-size:25px" href = "/resources/img/Ruck.jpg" >Просмотреть</a>
+                    </td>
+                    <td>
+                    <form class="hide-submit" method='post'>    
+                    <label>
+            <input type="submit" />
+            <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 50 50" width="40px" height="40px"><path d="M 21 2 C 19.354545 2 18 3.3545455 18 5 L 18 7 L 10.154297 7 A 1.0001 1.0001 0 0 0 9.984375 6.9863281 A 1.0001 1.0001 0 0 0 9.8398438 7 L 8 7 A 1.0001 1.0001 0 1 0 8 9 L 9 9 L 9 45 C 9 46.645455 10.354545 48 12 48 L 38 48 C 39.645455 48 41 46.645455 41 45 L 41 9 L 42 9 A 1.0001 1.0001 0 1 0 42 7 L 40.167969 7 A 1.0001 1.0001 0 0 0 39.841797 7 L 32 7 L 32 5 C 32 3.3545455 30.645455 2 29 2 L 21 2 z M 21 4 L 29 4 C 29.554545 4 30 4.4454545 30 5 L 30 7 L 20 7 L 20 5 C 20 4.4454545 20.445455 4 21 4 z M 11 9 L 18.832031 9 A 1.0001 1.0001 0 0 0 19.158203 9 L 30.832031 9 A 1.0001 1.0001 0 0 0 31.158203 9 L 39 9 L 39 45 C 39 45.554545 38.554545 46 38 46 L 12 46 C 11.445455 46 11 45.554545 11 45 L 11 9 z M 18.984375 13.986328 A 1.0001 1.0001 0 0 0 18 15 L 18 40 A 1.0001 1.0001 0 1 0 20 40 L 20 15 A 1.0001 1.0001 0 0 0 18.984375 13.986328 z M 24.984375 13.986328 A 1.0001 1.0001 0 0 0 24 15 L 24 40 A 1.0001 1.0001 0 1 0 26 40 L 26 15 A 1.0001 1.0001 0 0 0 24.984375 13.986328 z M 30.984375 13.986328 A 1.0001 1.0001 0 0 0 30 15 L 30 40 A 1.0001 1.0001 0 1 0 32 40 L 32 15 A 1.0001 1.0001 0 0 0 30.984375 13.986328 z"/></svg>
+                </label>
+        </td>
+        </form>
+
+                    </tr>        
+        </table>
     <?php 
-    if (isset($_GET['spring']))
+    if (isset($_GET['spring']) && $spring_data[0]['spring_name'] != "Родник не существует или в стадии проверки")
     { 
     ?>
         <div class ="comment_block">
         
         <form class ="comment_box"  action="spring_selected.php?spring=<?= $spring_id?>" method="post">
         <?php 
-        if (isset($_SESSION['user']) == true){
+        if (isset($_SESSION['user']) == true &&$spring_data[0]['spring_name']){
             ?>
             <textarea id="com_text" placeholder = "Напишите свой комментарий"  class = "comment_text" name="comment_text" type="text" maxlength=300 rows = 7  required></textarea>
             <input type="hidden" name="comment_user_id" value="<?=$_SESSION['user']?>">
@@ -148,10 +190,9 @@
             <!-- <p><?=$row['comment_text']?></p> -->
             <textarea readonly class = "user_text" rows = 6><?=$row['comment_text']?></textarea>
         </div>
-        <?php if($user_role == '99'){?>
-            <form class="hide-submit" action='/spring_selected.php?spring=<?= $spring_id?>&toDelete=1' method='post'>      
+        <?php if($user_role == '99'||$user_role == '100'){?>
+            <form class="hide-submit" action='/spring_selected.php?spring=<?= $spring_id?>' method='post'>      
             <input type='hidden' name='id' value="<?=intval($row['comment_id']) ?>" />
-            <input type='submit' value='Удалить'>
             <div class = "comment_right">
                 <label>
             <input type="submit" />

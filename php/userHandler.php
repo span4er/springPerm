@@ -84,3 +84,54 @@ function get_user_role($login){
     }
     else return ;
 }
+
+function get_users_roles(){
+    $sqlString = "SELECT
+    user_id,
+    user_login,
+    se.user_role_id,
+    t.user_role_name
+    from 
+    spring_perm.dim_users se
+    join 
+    spring_perm.dim_user_type t
+    on se.user_role_id = t.user_role_id";
+    try {
+    $data = executeSQL($sqlString);
+} catch (Exception $e) {
+//return "Не удалось подключиться к Базе данных";
+    return $e;
+}
+
+if ($data){
+    return $data;       
+}
+else return ;
+}
+
+function update_role_super($user_id){
+    $sqlString = "UPDATE
+    spring_perm.dim_users se
+    set user_role_id = 99
+    where user_id = $user_id;";
+    try {
+    $data = executeSQL($sqlString);
+    return "Nope";
+} catch (Exception $e) {
+//return "Не удалось подключиться к Базе данных";
+    return $e;
+}
+}
+function decline_role_super($user_id){
+    $sqlString = "UPDATE
+    spring_perm.dim_users se
+    set user_role_id = 0
+    where user_id = $user_id;";
+    try {
+    $data = executeSQL($sqlString);
+    return "Nope";
+} catch (Exception $e) {
+//return "Не удалось подключиться к Базе данных";
+    return $e;
+}
+}
